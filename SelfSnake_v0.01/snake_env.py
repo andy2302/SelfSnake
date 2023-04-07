@@ -2,6 +2,7 @@ import pygame
 import random
 import numpy as np
 
+
 class SnakeEnv:
     def __init__(self, width, height, size):
         self.width = width
@@ -50,14 +51,10 @@ class SnakeEnv:
         elif self.direction == "RIGHT":
             self.snake[0][0] += self.size
 
-        if not (0 <= self.snake[0][0] < self.width and 0 <= self.snake[0][1] < self.height):
+        # Add a check to ensure the snake's position is within the valid range
+        if not (0 <= self.snake[0][0] < self.width and 0 <= self.snake[0][1] < self.height) or any([self.snake[0] == s for s in self.snake[1:]]):
             self.done = True
             return self.get_state(), -1, self.done
-
-        for i in range(1, len(self.snake)):
-            if self.snake[0][0] == self.snake[i][0] and self.snake[0][1] == self.snake[i][1]:
-                self.done = True
-                return self.get_state(), -1, self.done
 
         if self.snake[0][0] == self.food[0] and self.snake[0][1] == self.food[1]:
             self.food = [random.randrange(0, int(self.width / self.size)) * self.size, random.randrange(0, int(self.height / self.size)) * self.size]
@@ -91,6 +88,12 @@ class SnakeEnv:
 
         pygame.display.flip()
         self.clock.tick(1000 // delay)
+
+        # Add an event handling loop
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.close()
+                exit(0)
 
     def close(self):
         pygame.quit()

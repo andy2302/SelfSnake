@@ -12,7 +12,16 @@ class DQN(nn.Module):
         self.conv2 = nn.Conv2d(32, 64, kernel_size=3, stride=1)
         self.bn2 = nn.BatchNorm2d(64)
 
-        self.head = nn.Linear(64 * (width // size - 2) * (height // size - 2), num_actions)
+        # Calculate the output dimensions of the second convolutional layer
+        def conv2d_output_size(size, kernel_size, stride):
+            return (size - kernel_size) // stride + 1
+
+        conv1_output_width = conv2d_output_size(width // size, 3, 1)
+        conv1_output_height = conv2d_output_size(height // size, 3, 1)
+        conv2_output_width = conv2d_output_size(conv1_output_width, 3, 1)
+        conv2_output_height = conv2d_output_size(conv1_output_height, 3, 1)
+
+        self.head = nn.Linear(64 * conv2_output_width * conv2_output_height, num_actions)
 
     def forward(self, x):
         x = F.relu(self.bn1(self.conv1(x)))
