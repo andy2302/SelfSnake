@@ -11,10 +11,12 @@ GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
 # Set the screen
+# Full screen
 # screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 # WIDTH, HEIGHT = screen.get_size()
 # SIZE = 20
 
+# Window
 WIDTH, HEIGHT = 1080, 720
 SIZE = 20
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
